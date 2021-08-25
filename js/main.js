@@ -22,9 +22,8 @@ let game = new Phaser.Game(config);
 
 
 // ゲーム開始前に呼び出される。画像取得などをする
-function preload()
-{
-	// 画像フォルダから素材を取得
+function preload() {
+    // 画像フォルダから素材を取得
     this.load.image('sky', 'image/background.jpg'); // 背景
     this.load.image('ground', 'image/ground.png');  // 地面
     this.load.image('block', 'image/block1.png');   // 壁
@@ -47,34 +46,33 @@ let scoreText;
 let clearText;
 
 // ゲーム開始時に呼び出される。背景やプレイヤーの配置をしたりする
-function create ()
-{
+function create() {
     this.cameras.main.setBounds(0, 0, 2400, 600);
     this.physics.world.setBounds(0, 0, 2400, 600);
-	
-	// 背景の設定
+
+    // 背景の設定
     this.add.image(400, 300, 'sky');
     this.add.image(1200, 300, 'sky');
     this.add.image(2000, 300, 'sky');
-    
+
 
     platforms = this.physics.add.staticGroup();
-	
-	// 地面の配置
+
+    // 地面の配置
     platforms.create(400, 568, 'ground').setScale(2).refreshBody();
     platforms.create(1200, 568, 'ground').setScale(2).refreshBody();
     platforms.create(2000, 568, 'ground').setScale(2).refreshBody();
 
-	// 壁の設定
-	platforms.create(50, 520, 'block');
-	platforms.create(600, 568, 'block');
-	platforms.create(750, 530, 'block');
-	
-	// ゴールの設定
-	goals = this.physics.add.staticGroup();
-	goals.create(2000, 500, 'goal');
+    // 壁の設定
+    platforms.create(50, 520, 'block');
+    platforms.create(600, 568, 'block');
+    platforms.create(750, 530, 'block');
 
-	// プレイヤーの設定
+    // ゴールの設定
+    goals = this.physics.add.staticGroup();
+    goals.create(2000, 500, 'goal');
+
+    // プレイヤーの設定
     player = this.physics.add.sprite(100, 450, 'dude');
 
     player.setBounce(0.2);
@@ -91,7 +89,7 @@ function create ()
 
     this.anims.create({
         key: 'turn',
-        frames: [ { key: 'dude', frame: 4 } ],
+        frames: [{ key: 'dude', frame: 4 }],
         frameRate: 20
     });
 
@@ -102,7 +100,7 @@ function create ()
         repeat: -1
     });
 
-	// ユーザからの入力イベントを取得するオブジェクト作成
+    // ユーザからの入力イベントを取得するオブジェクト作成
     cursors = this.input.keyboard.createCursorKeys();
 
     coins = this.physics.add.group({
@@ -118,17 +116,17 @@ function create ()
     });
 
     bombs = this.physics.add.group();
-	
-	// スコアのテキスト設定
+
+    // スコアのテキスト設定
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
     scoreText.setScrollFactor(0);
 
-	// 衝突判定の設定。地面は、コイン・プレイヤー・爆弾と衝突する。これがないと地面を貫通してしまう
+    // 衝突判定の設定。地面は、コイン・プレイヤー・爆弾と衝突する。これがないと地面を貫通してしまう
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(coins, platforms);
     this.physics.add.collider(bombs, platforms);
 
-	// プレイヤーとコインが重なれば、collectCoin() を呼び出す
+    // プレイヤーとコインが重なれば、collectCoin() を呼び出す
     this.physics.add.overlap(player, coins, collectCoin, null, this);
     this.physics.add.collider(player, bombs, hitBomb, null, this);
     this.physics.add.overlap(player, goals, gameClear, null, this);
@@ -136,53 +134,45 @@ function create ()
 
 
 // ゲーム進行中に呼び出す
-function update()
-{
-	// ゲームオーバーになったら処理終了(クリア時もここに入る)
-    if (gameOver)
-    {
+function update() {
+    // ゲームオーバーになったら処理終了(クリア時もここに入る)
+    if (gameOver) {
         return;
     }
-	
-	// ←キー押下
-    if (cursors.left.isDown)
-    {
+
+    // ←キー押下
+    if (cursors.left.isDown) {
         player.setVelocityX(-160);
         player.anims.play('left', true);
     }
-    
+
     // →キー押下
-    else if (cursors.right.isDown)
-    {
+    else if (cursors.right.isDown) {
         player.setVelocityX(160);
 
         player.anims.play('right', true);
     }
-    else
-    {
+    else {
         player.setVelocityX(0);
         player.anims.play('turn');
     }
 
-	// ↑キー押下
-    if (cursors.up.isDown && player.body.touching.down)
-    {
+    // ↑キー押下
+    if (cursors.up.isDown && player.body.touching.down) {
         player.setVelocityY(-330);
     }
 }
 
 // コインと接触した時
-function collectCoin (player, coin)
-{
-	// コインを消す
+function collectCoin(player, coin) {
+    // コインを消す
     coin.disableBody(true, true);
 
-	// スコアを加算してスコアのテキスト更新
+    // スコアを加算してスコアのテキスト更新
     score += 10;
     scoreText.setText('Score: ' + score);
 
-    if (coins.countActive(true) === 0)
-    {
+    if (coins.countActive(true) === 0) {
         //  A new batch of coins to collect
         coins.children.iterate(function (child) {
 
@@ -202,19 +192,18 @@ function collectCoin (player, coin)
 }
 
 // 爆弾と接触した時
-function hitBomb (player, bomb)
-{
-	this.physics.pause();
-	player.setTint(0xff0000);
-	player.anims.play('turn');
-	gameOver = true;
+function hitBomb(player, bomb) {
+    this.physics.pause();
+    player.setTint(0xff0000);
+    player.anims.play('turn');
+    gameOver = true;
 }
 
 // ゴールと接触した時
 function gameClear() {
-	this.physics.pause();
-	player.anims.play('turn');
-	// GameClearのテキストを表示
-	clearText = this.add.text(1650, 300, 'Game Clear', { fontSize: '100px', fill: '#000' });
-	gameOver = true;
+    this.physics.pause();
+    player.anims.play('turn');
+    // GameClearのテキストを表示
+    clearText = this.add.text(1650, 300, 'Game Clear', { fontSize: '100px', fill: '#000' });
+    gameOver = true;
 }
