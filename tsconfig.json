@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+      "target": "ES6",            //どのECMAScript仕様に書き出すか指定
+      "module": "commonjs",       //各モジュールのexportの書き出し方を指定
+      "sourceMap": true,          //sourceMapをつけるかどうか
+      "noImplicitAny": false,     //any型を見つけた時に怒るかどうか
+      "strict": false             //厳密な型指定を有効化するかどうか
+    }
+}
