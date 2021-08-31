@@ -29,7 +29,7 @@ export default class MainScene extends Phaser.Scene {
     this.load.image('coin', '../assets/coin.png');      // コイン
     this.load.image('bomb', '../assets/bomb.png');      // 爆弾
     this.load.image('goal', '../assets/goal.png');      // ゴール
-    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 }); // プレイヤー
+    this.load.spritesheet('dude', 'assets/soldier_60x95.png', { frameWidth: 60, frameHeight: 95 }); // プレイヤー
   }
 
   // ゲーム開始時に呼び出される。背景やプレイヤーの配置をしたりする
@@ -68,23 +68,37 @@ export default class MainScene extends Phaser.Scene {
     this.cameras.main.startFollow(player, true);
 
     this.anims.create({
-        key: 'left',
-        frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
-        frameRate: 10,
-        repeat: -1
-    });
-
-    this.anims.create({
         key: 'turn',
-        frames: [{ key: 'dude', frame: 4 }],
+        frames: [{ key: 'dude', frame: 0 }],
         frameRate: 20
     });
 
     this.anims.create({
+      key: 'up-right',
+      frames: this.anims.generateFrameNumbers('dude', { start: 1, end: 4 }),
+      frameRate: 3,
+      repeat: 1
+    });
+
+    this.anims.create({
+      key: 'up-left',
+      frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+      frameRate: 3,
+      repeat: 1
+    });
+
+    this.anims.create({
         key: 'right',
-        frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+        frames: this.anims.generateFrameNumbers('dude', { start: 9, end: 16 }),
         frameRate: 10,
         repeat: -1
+    });
+
+    this.anims.create({
+      key: 'left',
+      frames: this.anims.generateFrameNumbers('dude', { start: 17, end: 24 }),
+      frameRate: 10,
+      repeat: -1
     });
 
     // ユーザからの入力イベントを取得するオブジェクト作成
@@ -130,19 +144,36 @@ export default class MainScene extends Phaser.Scene {
 
     // ←キー押下
     if (cursors.left.isDown) {
-        player.setVelocityX(-160);
+      player.setVelocityX(-160);
+
+      if(!player.body.touching.down){
+        player.anims.play('up-left', true);
+      }
+      else{
         player.anims.play('left', true);
+      }
     }
 
     // →キー押下
     else if (cursors.right.isDown) {
-        player.setVelocityX(160);
+      player.setVelocityX(160);
 
+      if(!player.body.touching.down){
+        player.anims.play('up-right', true);
+      }
+      else{
         player.anims.play('right', true);
+      }
     }
     else {
-        player.setVelocityX(0);
+      player.setVelocityX(0);
+
+      if(!player.body.touching.down){ 
+        player.anims.play('up-right', true);
+      }
+      else{
         player.anims.play('turn');
+      }
     }
 
     // ↑キー押下
