@@ -14,6 +14,7 @@ export default class TitleScene extends Phaser.Scene {
       // 画像フォルダから素材を取得
       this.load.image('themebg', '../assets/theme_bg.jpg'); // 背景
       this.load.image('title', '../assets/title_logo.png');  // タイトル
+      this.load.image('titlebgShinden', '../assets/titlebg_shinden.png');  // タイトル
       this.load.image('menuStart', '../assets/menu_start.png');   // メニュースタート
       this.load.image('menuRank', '../assets/menu_rank.png');      // メニューランク
       this.load.audio('buttonSound', '../assets/sound/button_on.mp3');      // メニュー押下音
@@ -39,12 +40,16 @@ export default class TitleScene extends Phaser.Scene {
     this.add.image(400, 300, 'themebg');
 
     // タイトルの設定
+    this.add.image(400, 180, 'titlebgShinden');
     this.add.image(400, 200, 'title');
 
     // メニューの設定
-    const menuStart = this.add.image(380, 350, 'menuStart');
-    const menuRank = this.add.image(380, 440, 'menuRank');
+    const menuStart = this.add.image(400, 360, 'menuStart');
+    const menuRank = this.add.image(400, 450, 'menuRank');
    
+    // コピーライトと著作権書いてみた
+    this.add.text(200,575,'©2021 GEEX Inc. TeamFlower All Rights Reserved');
+
     //setInteractiveを呼ぶと動的なオブジェクトになる
     //入力系のイベントなどが有効化される
     menuStart.setInteractive();
