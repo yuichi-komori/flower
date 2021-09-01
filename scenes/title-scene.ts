@@ -1,5 +1,7 @@
 let buttonSound;
 let runSound;
+let titleBgmIntro;
+let titleBgmLoop;
 export default class TitleScene extends Phaser.Scene {
   constructor() {
     super({
@@ -16,13 +18,23 @@ export default class TitleScene extends Phaser.Scene {
       this.load.image('menuRank', '../assets/menu_rank.png');      // メニューランク
       this.load.audio('buttonSound', '../assets/sound/button_on.mp3');      // メニュー押下音
       this.load.audio('runSound', '../assets/sound/running_oto.mp3');      // ゲームへ移行音
+      this.load.audio('titleBgmIntro', '../assets/sound/title_bgm_intro.wav');      // BGMイントロ
+      this.load.audio('titleBgmLoop', '../assets/sound/title_bgm_loop.wav');      // BGMループ
     }
 
 
   create() {
 
+    // 音素材準備
     buttonSound = this.sound.add('buttonSound');
     runSound = this.sound.add('runSound');
+    titleBgmIntro = this.sound.add('titleBgmIntro');
+    titleBgmLoop = this.sound.add('titleBgmLoop', {loop: true});
+
+    // オープニング曲再生
+    titleBgmIntro.play();
+    titleBgmLoop.play();
+
     // 背景の設定
     this.add.image(400, 300, 'themebg');
 
@@ -44,12 +56,14 @@ export default class TitleScene extends Phaser.Scene {
       runSound.play();
       // 走る音待ち
       setTimeout(() => {
+        titleBgmLoop.pause();
         this.scene.start('Main'); // Mainに遷移
       }, 3000);
     }, this);
     
     menuRank.on('pointerdown', function (pointer) {
       buttonSound.play();
+      titleBgmLoop.pause();
       this.scene.start('Rank'); // Rankに遷移
     }, this);
     
