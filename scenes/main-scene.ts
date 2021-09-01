@@ -29,6 +29,7 @@ export default class MainScene extends Phaser.Scene {
     this.load.image('coin', '../assets/coin.png');      // コイン
     this.load.image('bomb', '../assets/bomb.png');      // 爆弾
     this.load.image('goal', '../assets/goal.png');      // ゴール
+    this.load.image('backButton', '../assets/back.png');      // 戻るボタン
     this.load.spritesheet('dude', 'assets/soldier_60x95.png', { frameWidth: 60, frameHeight: 95 }); // プレイヤー
   }
 
@@ -131,15 +132,14 @@ export default class MainScene extends Phaser.Scene {
     this.physics.add.overlap(player, coins, this.collectCoin, null, this);
     this.physics.add.collider(player, bombs, this.hitBomb, null, this);
     this.physics.add.overlap(player, goals, this.gameClear, null, this);
+
   }
   
   // ゲーム進行中に呼び出す
   update() {
       // ゲームオーバーになったら処理終了(クリア時もここに入る)
     if (gameOver) {
-      setTimeout(function(){
-        this.scene.start('Title');
-      }, 2000); 
+      return;
     }
 
     // ←キー押下
@@ -222,7 +222,12 @@ export default class MainScene extends Phaser.Scene {
     this.physics.pause();
     player.anims.play('turn');
     // GameClearのテキストを表示
-    clearText = this.add.text(1650, 300, 'Game Clear', { fontSize: '100px'});
+    clearText = this.add.text(1650, 200, 'Game Clear', { fontSize: '100px'});
+    const backButton = this.add.image(1900, 400, 'backButton');
+    backButton.setInteractive();
+    backButton.on('pointerdown', function (pointer) {
+      this.scene.start('Title'); // Titleに遷移
+       }, this);
     gameOver = true;
   }
 }
