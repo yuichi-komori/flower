@@ -27,7 +27,27 @@ export default class RankScene extends Phaser.Scene {
     this.add.image(400, 200, 'titleRank');
 
     // ランクリストの設定
-    this.add.text(300,360,'1, test1  123456789');
+    // 読み込み
+    let array = this.ReadFileLine("../ranking.csv");
+
+    var list = [];
+    for (var i=0; i<array.length; i++){
+      let strText = String(array[i]).split(",");
+      list[i]= [];
+      for(var j=0; j<2; j++) {
+        list[i][j] = strText[j];
+      }
+    }
+    // スコアの降順にソート
+    list = list.sort(function(a,b){return(b[1] - a[1]);});
+    
+    // ランキングの文字スタートポジション
+    let rankingStartPosition = 300;
+    for (let i = 0; i < list.length; i++) {
+      this.add.text(300, rankingStartPosition, String(i + 1) + "："+ String(list[i]).split(',').join(" "));
+      rankingStartPosition = rankingStartPosition + 30;
+    }
+    
     const backButton = this.add.image(380, 520, 'backButton');
      
 
@@ -40,7 +60,31 @@ export default class RankScene extends Phaser.Scene {
       buttonSound.play();
       this.scene.start('Title'); // Titleに遷移
        }, this);
-    
-    
+
+  }
+
+  // ランキング情報読み込み
+  ReadFileLine(InputFilePath:string) {
+    let srt = new XMLHttpRequest();
+    srt.open("GET", InputFilePath, false);
+    try {
+      srt.send(null);
+    } catch (err) {
+      console.log(err)
+    }
+
+    // 配列を用意
+    let csvArr = [];
+    // 改行ごとに配列化
+    let lines = srt.responseText.split("\n");
+
+    // 1行ごとに処理
+    for (let i = 0; i < lines.length; ++i) {
+      let cells = lines[i].split(",");
+      if (cells.length != 1) {
+        csvArr.push(cells);
+      }
+    }
+    return csvArr;
   }
 }
