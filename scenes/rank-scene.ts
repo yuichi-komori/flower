@@ -46,6 +46,10 @@ export default class RankScene extends Phaser.Scene {
     for (let i = 0; i < list.length; i++) {
       this.add.text(300, rankingStartPosition, String(i + 1) + "："+ String(list[i]).split(',').join(" "));
       rankingStartPosition = rankingStartPosition + 30;
+      // 3位くらいまでにしとく
+      if(i == 2) {
+        break;
+      }
     }
     
     const backButton = this.add.image(380, 520, 'backButton');
