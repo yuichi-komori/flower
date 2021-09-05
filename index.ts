@@ -25,6 +25,41 @@ export class Game extends Phaser.Game {
   }
 }
 
+export class CsvControl {
+    constructor() {
+    
+    }
+
+    /**
+     * 指定パスのCSVの中身を配列で返却
+     * @param InputFilePath 
+     * @returns csvArr
+     */
+    ReadFileLine(InputFilePath:string) {
+      let srt = new XMLHttpRequest();
+      srt.open("GET", InputFilePath, false);
+      try {
+        srt.send(null);
+      } catch (err) {
+        console.log(err)
+      }
+  
+      // 配列を用意
+      let csvArr = [];
+      // 改行ごとに配列化
+      let lines = srt.responseText.split("\n");
+  
+      // 1行ごとに処理
+      for (let i = 0; i < lines.length; ++i) {
+        let cells = lines[i].split(",");
+        if (cells.length != 1) {
+          csvArr.push(cells);
+        }
+      }
+      return csvArr;
+    }
+}
+
 //HTMLがロードされた後にインスタンスを生成する
 window.addEventListener('load', () => {
   const game = new Game(config);

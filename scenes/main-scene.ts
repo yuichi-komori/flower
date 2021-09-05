@@ -38,6 +38,7 @@ let timeText;
 let scoreText;
 let clearText;
 let updateByFrame = 0;        // ※Update()で使用
+let clearTime; // ランキングCSVに書き込む用
 
 
 export default class MainScene extends Phaser.Scene {
@@ -326,7 +327,8 @@ export default class MainScene extends Phaser.Scene {
     let minutes = Math.floor(elapsedSeconds / 60);
     let seconds = Math.floor(elapsedSeconds);
     timeText.setText('Time:  ' + ((minutes === 0) ? '' : minutes + "m ") + (seconds % 60) + 's');
-
+    // CSVには秒の状態で書き込む(ソートしたいので)
+    clearTime = elapsedSeconds;
     // 進んだ距離を設定
     score = this.convertXToMeter(player.body.position.x);
     let score_km = Math.floor(score / 1000);
@@ -439,6 +441,8 @@ export default class MainScene extends Phaser.Scene {
       this.scene.start('Title'); // Titleに遷移
        }, this);
     
+    // クリアタイムをCSVに書き込み
+    this.writeCsv();
     gameOver = true;
   }
 
@@ -485,5 +489,18 @@ export default class MainScene extends Phaser.Scene {
       // ランダムにy座標の値を変える
       y = origin_y + Math.floor(height * Math.random());
     }
+  }
+
+  // CSV書き込み
+  writeCsv() {
+
+    let rankData = this.getCurrentDate() + "," + clearTime + "\n";
+    
+  }
+
+  // 現在日付取得処理(yyyy-mm-dd)
+  getCurrentDate() {
+    const date = new Date();
+    return date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
   }
 }

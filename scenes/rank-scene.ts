@@ -1,3 +1,5 @@
+import { CsvControl } from "..";
+
 let buttonSound;
 
 export default class RankScene extends Phaser.Scene {
@@ -28,7 +30,8 @@ export default class RankScene extends Phaser.Scene {
 
     // ランクリストの設定
     // 読み込み
-    let array = this.ReadFileLine("../ranking.csv");
+    let cc = new CsvControl();
+    let array = cc.ReadFileLine("../ranking.csv");
 
     var list = [];
     for (var i=0; i<array.length; i++){
@@ -39,12 +42,15 @@ export default class RankScene extends Phaser.Scene {
       }
     }
     // スコアの降順にソート
-    list = list.sort(function(a,b){return(b[1] - a[1]);});
+    list = list.sort(function(a,b){return(a[1] - b[1]);});
     
     // ランキングの文字スタートポジション
     let rankingStartPosition = 300;
     for (let i = 0; i < list.length; i++) {
-      this.add.text(300, rankingStartPosition, String(i + 1) + "："+ String(list[i]).split(',').join(" "));
+      let text :any = String(list[i]).split(',');
+      let minutes :number = Math.floor(text[1]/ 60);
+      let seconds :number = Math.floor(text[1]);
+      this.add.text(300, rankingStartPosition, String(i + 1) + "："+ text[0] + " " +((minutes === 0) ? '' : minutes + "m ") + (seconds % 60) + 's');
       rankingStartPosition = rankingStartPosition + 30;
       // 3位くらいまでにしとく
       if(i == 2) {
@@ -65,30 +71,5 @@ export default class RankScene extends Phaser.Scene {
       this.scene.start('Title'); // Titleに遷移
        }, this);
 
-  }
-
-  // ランキング情報読み込み
-  ReadFileLine(InputFilePath:string) {
-    let srt = new XMLHttpRequest();
-    srt.open("GET", InputFilePath, false);
-    try {
-      srt.send(null);
-    } catch (err) {
-      console.log(err)
-    }
-
-    // 配列を用意
-    let csvArr = [];
-    // 改行ごとに配列化
-    let lines = srt.responseText.split("\n");
-
-    // 1行ごとに処理
-    for (let i = 0; i < lines.length; ++i) {
-      let cells = lines[i].split(",");
-      if (cells.length != 1) {
-        csvArr.push(cells);
-      }
-    }
-    return csvArr;
   }
 }
