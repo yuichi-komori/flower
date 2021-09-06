@@ -72,6 +72,7 @@ export default class MainScene extends Phaser.Scene {
 
   // 初期化
   init(){
+    gameOver = false;
     GOAL_X = this.convertMeterToX(GOAL) + PLAYER_WIDTH;
     MAIN_WIDTH = GOAL_X + GOAL_WIDTH;
   }
