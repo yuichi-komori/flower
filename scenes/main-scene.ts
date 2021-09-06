@@ -1,6 +1,6 @@
 // 定数
 const LIMIT_TIME = 30120000;     // 502分（8.3時間）[ms]
-const GOAL = 101;                // ゴール地点 + 1 [m] ※本来は「42195 + 1」ですが、開発時はここで調整してください！
+const GOAL = 41843;              // ゴール地点 + 1 [m] ※本来は「42195 + 1」ですが、開発時はここで調整してください！
 const PLAYER_WIDTH = 60;         // プレイヤー画像のwidth [p]
 const GOAL_WIDTH = 372;          // ゴール画像のwidth [p]
 let GOAL_X;                      // ※GOAL, PLAYER_WIDTH, GOAL_HALF_WIDTHにより、算出 [p]
